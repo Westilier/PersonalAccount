@@ -11,4 +11,11 @@ public class StudentEntity
     public string? PhotoUrl { get; set; }
     public string PasswordHash { get; set; } = string.Empty;
     public List<ConfirmationTokenEntity> ConfirmationTokens { get; set; } = [];
+
+    public void Update(StudentEntity editable)
+    {
+        FullName = editable.FullName;
+        GroupName = editable.GroupName;
+        PhotoUrl = editable.PhotoUrl;
+    }
 }
