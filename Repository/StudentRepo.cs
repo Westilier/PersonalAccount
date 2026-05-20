@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 using PersonalAccount.Data;
 using PersonalAccount.Data.Entities;
 using PersonalAccount.Models.Students;
@@ -22,5 +23,16 @@ public class StudentRepo<T>(AppDbContext context,  IMapper<StudentEntity, T> map
     {
         var entity = await Students.FindAsync(id);
         return mapper.ToModel(entity);
+    }
+
+    public async Task UpdateByIdAsync(int id, StudentModel student)
+    {
+        var findStudent = Students.FirstOrDefault(note => note.Id == id) ?? throw new IndexOutOfRangeException();
+        findStudent.Update(new StudentEntity(){
+            FullName = student.FullName,
+            GroupName = student.GroupName,
+            PhotoUrl = student.PhotoUrl?.ToString(),
+            });
+        await context.SaveChangesAsync();
     }
 }
