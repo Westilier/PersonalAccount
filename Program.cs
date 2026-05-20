@@ -7,6 +7,7 @@ using PersonalAccount.Models;
 using PersonalAccount.Models.Students;
 using PersonalAccount.Repository;
 using PersonalAccount.Repository.Mappers;
+using PersonalAccount.Services;
 using PersonalAccount.Services.Auth;
 using PersonalAccount.Services.Cabinet;
 using PersonalAccount.Services.Db;
@@ -35,7 +36,9 @@ namespace PersonalAccount
             builder.Services.AddScoped<IStudentAuthService, StudentAuthService>();
             builder.Services.AddScoped<IStudentCabinetService, StudentCabinetService>();
             builder.Services.AddScoped<IConfirmationTokenService, ConfirmationTokenTokenService>();
-            
+            builder.Services.AddScoped<IStudentService, StudentService>();
+
+
             builder.Services.AddScoped<IStudentRepo<StudentAuthModel>, StudentRepo<StudentAuthModel>>();
             builder.Services.AddScoped<IStudentRepo<StudentModel>, StudentRepo<StudentModel>>();
             builder.Services.AddScoped<IConfirmationTokenRepo, ConfirmationTokenRepo>();
