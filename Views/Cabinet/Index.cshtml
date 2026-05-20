@@ -7,9 +7,15 @@
 <div class="container">
     <div class="d-flex justify-content-between align-content-center">
         <h1 class="mb-4">Личный кабинет студента</h1>
-        <form method="post" asp-controller="Account" asp-action="Logout">
-            <button class="btn btn-secondary" type="submit">Выйти</button>
-        </form>
+        
+        <div class="d-flex align-content-end align-content-center gap-5">
+            <form method="get" asp-controller="Cabinet" asp-action="Edit">
+                <button class="btn btn-secondary" type="submit">Редактировать</button>
+            </form>
+            <form method="post" asp-controller="Account" asp-action="Logout">
+                <button class="btn btn-secondary" type="submit">Выйти</button>
+            </form>
+        </div>
     </div>
 
     <div class="card">
