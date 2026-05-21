@@ -10,7 +10,7 @@ using PersonalAccount.Utils;
 namespace PersonalAccount.Controllers;
 
 [Authorize]
-public class CabinetController(IStudentCabinetService cabinet, IStudentService studentService) : Controller
+public class CabinetController(IStudentCabinetService cabinet, IStudentService studentService, IPasswordService password) : Controller
 {
     [HttpGet]
     public async Task<IActionResult> Index()
@@ -59,6 +59,40 @@ public class CabinetController(IStudentCabinetService cabinet, IStudentService s
             PhotoUrl = model.PhotoUrl?.ToUri()
         });
 
+        return RedirectToAction("Index");
+    }
+
+    [HttpGet]
+    public IActionResult ChangePassword()
+    {
+        return View(new PasswordChangeViewModel());
+    }
+
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> ChangePassword(PasswordChangeViewModel model)
+    {
+        var id = User.GetId();
+        if (id is null) return RedirectToAction("Error", "Home");
+
+        if (model == null) return RedirectToAction("Error", "Home");
+
+        if (model.OldPassword == model.NewPassword)
+            ModelState.AddModelError(string.Empty, "Новый пароль должен отличаться от старого пароля");
+
+        if (!ModelState.IsValid)
+        {
+            return View(model);
+        }
+
+        if (!await password.ValidatePasswordAsync(id.Value, model.OldPassword))
+        {
+            ModelState.AddModelError(string.Empty, "Старый пароль введен неверно");
+            return View(model);
+        }
+
+        await password.UpdatePasswordAsync(id.Value, model.NewPassword);
         return RedirectToAction("Index");
     }
 }
