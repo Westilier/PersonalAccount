@@ -35,4 +35,10 @@ public class StudentRepo<T>(AppDbContext context,  IMapper<StudentEntity, T> map
             });
         await context.SaveChangesAsync();
     }
+    public async Task UpdatePasswordHashAsync(int id, string passwordHash)
+    {
+        var findStudent = Students.FirstOrDefault(note => note.Id == id) ?? throw new IndexOutOfRangeException();
+        findStudent.PasswordHash = passwordHash;
+        await context.SaveChangesAsync();
+    }
 }

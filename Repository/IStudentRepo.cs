@@ -7,5 +7,6 @@ namespace PersonalAccount.Repository
         public Task<T?> GetByEmailAsync(string email);
         public Task<T?> GetByIdAsync(int id);
         Task UpdateByIdAsync(int id, StudentModel student);
+        Task UpdatePasswordHashAsync(int id, string passwordHash);
     }
 }
