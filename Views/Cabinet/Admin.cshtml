@@ -28,6 +28,22 @@
                         <p>
                             @studentInfo.Email
                         </p>
+                        @if (!studentInfo.IsEmailConfirmed)
+                        {
+                            <p class="text-warning alert">
+                                Почта не подтверждена
+                            </p>
+                            <form method="post" asp-action="ConfirmStudentEmail">
+                                <input type="hidden" name="accountId" value="@studentInfo.AccountId"/>
+                                <button type="submit">Потвердить почту</button>
+                            </form>
+                        }
+                        else
+                        {
+                            <p class="text-success">
+                                Почта подтверждена
+                            </p>
+                        }
                     </div>
                 </div>
             </div>
