@@ -26,9 +26,9 @@ public class CabinetController(
         switch (role)
         {
             case AccountRole.Student:
-                return RedirectToAction("Student", new { accountId, role });
+                return RedirectToAction("Student");
             case AccountRole.Administrator:
-                return RedirectToAction("Admin", new { accountId, role });
+                return RedirectToAction("Admin");
             case AccountRole.Teacher:
             default:
                 return RedirectToAction("Error", "Home");
@@ -36,13 +36,18 @@ public class CabinetController(
     }
 
     [HttpGet]
-    public async Task<IActionResult> Student(int accountId, AccountRole role)
+    [Authorize(Roles = "Student")]
+    public async Task<IActionResult> Student()
     {
         var accountEmail = User.GetEmail();
-        if (accountEmail is null || role != AccountRole.Student)
+        if (accountEmail is null)
             return RedirectToAction("Error", "Home");
 
-        var student = await studentCabinet.GetStudentAsync(accountId);
+        var accountId = User.GetId();
+        if(accountId is null)
+            return RedirectToAction("Error", "Home");
+
+        var student = await studentCabinet.GetStudentAsync(accountId.Value);
         if (student is null) return RedirectToAction("Error", "Home");
 
         var isEmailConfirmed = await confirmations.HasConfirmedTokensAsync(student.Id);
@@ -58,25 +63,42 @@ public class CabinetController(
     }
 
     [HttpGet]
-    public async Task<IActionResult> Admin(int accountId, AccountRole role)
+    [Authorize(Roles = "Administrator")]
+    public async Task<IActionResult> Admin()
     {
-        if (role != AccountRole.Administrator)
-            return RedirectToAction("Error", "Home");
-
         var accounts = await adminCabinet.GetAllStudentAccountsAsync();
         var profiles = await adminCabinet.GetAllStudentProfilesAsync();
 
-        var studentInfos = profiles.Select(profile => new StudentInfoViewModel
+        var studentInfos = new List<StudentInfoViewModel>();
+
+        foreach (var profile in profiles)
         {
-            Email = accounts[profile.AccountId].Email,
-            FullName = profile.FullName,
-            GroupName = profile.GroupName,
-            PhotoUrl = profile.PhotoUrl?.ToString(),
-        }).ToList();
+            var isConfirmed = await confirmations.HasConfirmedTokensAsync(profile.AccountId);
+
+            studentInfos.Add(new StudentInfoViewModel
+            {
+                AccountId = profile.AccountId,
+                Email = accounts[profile.AccountId].Email,
+                FullName = profile.FullName,
+                GroupName = profile.GroupName,
+                PhotoUrl = profile.PhotoUrl?.ToString(),
+                IsEmailConfirmed = isConfirmed
+            });
+        }
 
         return View(new AdminCabinetViewModel
         {
             StudentInfos = studentInfos
         });
     }
+
+    [HttpPost]
+    [Authorize(Roles = "Administrator")]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> ConfirmStudentEmail(int accountId)
+    {
+        await adminCabinet.ConfirmStudentEmailAsync(accountId); 
+        return RedirectToAction("Admin");
+    }
+
 }
