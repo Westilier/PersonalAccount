@@ -1,4 +1,5 @@
-﻿using PersonalAccount.Constants;
+﻿using Microsoft.EntityFrameworkCore;
+using PersonalAccount.Constants;
 using PersonalAccount.Models;
 using PersonalAccount.Repositories;
 using PersonalAccount.Types;
@@ -66,8 +67,16 @@ public class AdminCabinetService(
     }
     public async Task DeleteGroupAsync(int groupId)
     {
-        if (groupId != GroupConstants.NoGroup.Id)
-            await groupRepo.DeleteByIdAsync(groupId);
+        if (groupId == GroupConstants.NoGroup.Id) return;
+
+        var studentProfiles = await GetAllStudentProfilesAsync();
+        var studentsInGroup = studentProfiles.Where(s => s.GroupId == groupId);
+        foreach (var item in studentsInGroup)
+        {
+            await ChangeStudentGroupAsync(item.AccountId, GroupConstants.NoGroup.Id);
+        }
+
+        await groupRepo.DeleteByIdAsync(groupId);
     }
 
     public async Task DeleteSubjectAsync(int subjectId)
