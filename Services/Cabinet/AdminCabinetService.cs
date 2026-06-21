@@ -63,4 +63,13 @@ public class AdminCabinetService(
     {
         await studentProfileRepo.UpdateGroupByAccountIdAsync(studentAccountId, groupId);
     }
+    public async Task DeleteGroupAsync(int groupId)
+    { 
+        await groupRepo.DeleteByIdAsync(groupId);
+    }
+
+    public async Task DeleteSubjectAsync(int subjectId)
+    {
+        await subjectRepo.DeleteByIdAsync(subjectId);
+    }
 }
