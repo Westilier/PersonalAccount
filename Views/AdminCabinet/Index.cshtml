@@ -75,6 +75,13 @@
                                         </button>
                                     </form>
                                 </div>
+                                <form method="post" asp-action="DeleteStudent" class="m-3">
+                                    <input type="hidden" name="studentAccountId" value="@studentInfo.AccountId" />
+                                    <button type="submit" class="btn btn-sm btn-outline-danger h-100 px-3 shadow-sm" title="Удаление студента"
+                                            onclick="return confirm('Вы уверены, что хотите полностью удалить студента «@studentInfo.FullName»?');">
+                                        <span>🗑️</span> Удалить
+                                    </button>
+                                </form>
                             </div>
                         }
                     }
@@ -94,7 +101,10 @@
                             <span class="fw-semibold text-dark">@subject.Name</span>
                             <form class="card" style="width: 400px" method="post" asp-action="DeleteSubject">
                                 <input type="hidden" name="subjectId" value="@subject.Id" />
-                                <button class="w-100 h-100 btn btn-outline-primary">Удалить</button>
+                                <button class="w-100 h-100 btn btn-outline-primary"
+                                        onclick="return confirm('Вы уверены, что хотите удалить дисциплину «@subject»?');">
+                                        Удалить
+                                </button>
                             </form>
                         </div>
                     </div>
