@@ -48,6 +48,8 @@ public class AdminCabinetController(
                 group => group.Key,
                 group => group.Select(student => new AdminCabinetStudentInfoViewModel
                     {
+                        AccountId = student.AccountId,
+                        GroupId = student.GroupId,
                         Email = accountDictionary[student.AccountId].Email,
                         FullName = student.FullName,
                         PhotoUrl = student.PhotoUrl?.ToString()
@@ -131,6 +133,14 @@ public class AdminCabinetController(
         if (!ModelState.IsValid) return View(model);
 
         await cabinetService.AddSubjectAsync(model.Name);
+        return RedirectToAction("Index");
+    }
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> ChangeStudentGroup(int studentAccountId, int groupId)
+    {
+        await cabinetService.ChangeStudentGroupAsync(studentAccountId, groupId);
+
         return RedirectToAction("Index");
     }
 }
