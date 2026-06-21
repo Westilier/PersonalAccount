@@ -107,10 +107,10 @@ public class AdminCabinetController(
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> AddGroup(AddGroupViewModel model)
-    {
-        if (!ModelState.IsValid || string.IsNullOrEmpty(model.Name)) return View(model);
+   {
+        if (!ModelState.IsValid) return View(model);
 
-        await cabinetService.AddGroupAsync(model.Name, model.Description, model.ImageUrl?.ToUri());
+        await cabinetService.AddGroupAsync(model.Name, model.Description?? string.Empty, model.ImageUrl?.ToUri());
 
         return RedirectToAction("Index");
     }
