@@ -135,12 +135,29 @@ public class AdminCabinetController(
         await cabinetService.AddSubjectAsync(model.Name);
         return RedirectToAction("Index");
     }
+
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> ChangeStudentGroup(int studentAccountId, int groupId)
     {
         await cabinetService.ChangeStudentGroupAsync(studentAccountId, groupId);
 
+        return RedirectToAction("Index");
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> DeleteGroup(int groupId)
+    {
+        await cabinetService.DeleteGroupAsync(groupId);
+        return RedirectToAction("Index");
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> DeleteSubject(int subjectId)
+    {
+        await cabinetService.DeleteSubjectAsync(subjectId);
         return RedirectToAction("Index");
     }
 }
