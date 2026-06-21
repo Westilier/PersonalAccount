@@ -55,12 +55,14 @@ public class AdminCabinetController(
                     .ToList()
             );
 
+        var subjects = await cabinetService.GetAllSubjectsAsync();
 
         return View(new AdminCabinetViewModel
         {
             GroupIdsOrder = groupIdsOrder,
             GroupInfos = groupInfos,
-            StudentInfos = studentInfos
+            StudentInfos = studentInfos,
+            Subjects = subjects
         });
     }
 
@@ -104,6 +106,7 @@ public class AdminCabinetController(
     {
         return View(new AddGroupViewModel());
     }
+
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> AddGroup(AddGroupViewModel model)
@@ -112,6 +115,22 @@ public class AdminCabinetController(
 
         await cabinetService.AddGroupAsync(model.Name, model.Description?? string.Empty, model.ImageUrl?.ToUri());
 
+        return RedirectToAction("Index");
+    }
+
+    [HttpGet]
+    public IActionResult AddSubject()
+    {
+        return View(new AddSubjectViewModel());
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> AddSubject(AddSubjectViewModel model)
+    {
+        if (!ModelState.IsValid) return View(model);
+
+        await cabinetService.AddSubjectAsync(model.Name);
         return RedirectToAction("Index");
     }
 }
