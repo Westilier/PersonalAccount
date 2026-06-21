@@ -59,4 +59,8 @@ public class AdminCabinetService(
         });
     }
 
+    public async Task ChangeStudentGroupAsync(int studentAccountId, int groupId)
+    {
+        await studentProfileRepo.UpdateGroupByAccountIdAsync(studentAccountId, groupId);
+    }
 }
