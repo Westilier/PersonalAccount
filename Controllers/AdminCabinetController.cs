@@ -140,8 +140,13 @@ public class AdminCabinetController(
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> ChangeStudentGroup(int studentAccountId, int groupId)
     {
-        await cabinetService.ChangeStudentGroupAsync(studentAccountId, groupId);
+        var isSuccess = await cabinetService.ChangeStudentGroupAsync(studentAccountId, groupId);
 
+        if (!isSuccess)
+        {
+            TempData["Error"] = "В группе нет мест!";
+            return RedirectToAction("Index");
+        }
         return RedirectToAction("Index");
     }
 
