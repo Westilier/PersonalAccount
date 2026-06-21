@@ -13,41 +13,46 @@
         @foreach (var groupId in Model.GroupIdsOrder)
         {
             var groupInfo = Model.GroupInfos[groupId];
-            var studentInfos = Model.StudentInfos[groupId];
-            
+
             <div class="container d-flex flex-column align-items-stretch gap-2">
                 <div class="card d-flex align-items-start justify-content-center p-5"
-                     style="height: 100px; background-color: #2b2f32; background-image: url(@groupInfo.ImageUrl); background-size: cover">
+                        style="height: 100px; background-color: #2b2f32; background-image: url(@groupInfo.ImageUrl); background-size: cover">
                     <h3 class=" text-center text-white  fw-bold">
                         @groupInfo.Name
                     </h3>
                 </div>
                 <span class="text-primary text-start text-wrap">@groupInfo.Description</span>
                 <div class="container d-flex flex-wrap gap-4">
-                    @foreach (var studentInfo in studentInfos)
+                    
+                    @if (Model.StudentInfos.TryGetValue(groupId, out var studentInfos))
                     {
-                        <div class="card" style="width: 400px">
-                            <div class="gap-2 d-grid align-items-stretch" style="grid-template-columns: repeat(2, 1fr)">
-                                <div class="w-100 h-100"
-                                     style="background-image: url(@studentInfo.PhotoUrl); background-size: cover">
-
-                                </div>
-                                <div class="d-flex flex-column gap-2 w-100 h-100">
-                                    <p class="card-header">
-                                        @studentInfo.FullName
-                                    </p>
-                                    <p>
-                                        @studentInfo.Email
-                                    </p>
+                        @foreach (var studentInfo in studentInfos)
+                        {
+                            <div class="card" style="width: 400px">
+                                <div class="gap-2 d-grid align-items-stretch" style="grid-template-columns: repeat(2, 1fr)">
+                                    <div class="w-100 h-100"
+                                            style="background-image: url(@studentInfo.PhotoUrl); background-size: cover">
+                                    </div>
+                                    <div class="d-flex flex-column gap-2 w-100 h-100">
+                                        <p class="card-header">
+                                            @studentInfo.FullName
+                                        </p>
+                                        <p>
+                                            @studentInfo.Email
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        }
                     }
                 </div>
-            </div>
+            </div>         
         }
         <form class="card" style="width: 400px" method="get" asp-action="RegisterStudent">
             <button class="w-100 h-100 btn btn-outline-primary">Зарегистрировать студента</button>
+        </form>
+        <form class="card" style="width: 400px" method="get" asp-action="AddGroup">
+            <button class="w-100 h-100 btn btn-outline-primary">Создать группу</button>
         </form>
     </div>
 </div>
