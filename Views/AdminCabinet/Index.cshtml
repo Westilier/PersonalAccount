@@ -48,12 +48,31 @@
                 </div>
             </div>         
         }
+        <div class="container d-flex flex-column gap-4 mt-4">
+            <div class="card bg-dark text-white p-4 shadow-sm border-0">
+                <h3 class="m-0 text-center fw-bold">Дисциплины</h3>
+            </div>
+            <div class="d-flex flex-wrap gap-3">
+                @foreach (var subject in Model.Subjects)
+                {
+                    <div class="card shadow-sm border-0 p-3 flex-grow-1" style="min-width: 250px; max-width: 400px;">
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="text-secondary">📚</span>
+                            <span class="fw-semibold text-dark">@subject.Name</span>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
         <div class="d-flex gap-4">
             <form class="card" style="width: 400px" method="get" asp-action="RegisterStudent">
                 <button class="w-100 h-100 btn btn-outline-primary">Зарегистрировать студента</button>
             </form>
             <form class="card" style="width: 400px" method="get" asp-action="AddGroup">
                 <button class="w-100 h-100 btn btn-outline-primary">Создать группу</button>
+            </form>
+            <form class="card" style="width: 400px" method="get" asp-action="AddSubject">
+                <button class="w-100 h-100 btn btn-outline-primary">Создать дисциплину</button>
             </form>
         </div>
     </div>
