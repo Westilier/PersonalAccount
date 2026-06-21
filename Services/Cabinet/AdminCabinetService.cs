@@ -8,7 +8,8 @@ public class AdminCabinetService(
     IStudentProfileRepo studentProfileRepo,
     ITeacherProfileRepo teacherProfileRepo,
     IAccountRepo accountRepo,
-    IGroupRepo groupRepo)
+    IGroupRepo groupRepo,
+    ISubjectRepo subjectRepo)
     : IAdminCabinetService
 {
     public async Task<List<AccountModel>> GetAllStudentAccountsAsync() =>
@@ -17,6 +18,8 @@ public class AdminCabinetService(
     public async Task<List<StudentProfileModel>> GetAllStudentProfilesAsync() => await studentProfileRepo.GetAllAsync();
 
     public async Task<List<GroupModel>> GetAllGroupsAsync() => await groupRepo.GetAllAsync();
+
+    public async Task<List<SubjectModel>> GetAllSubjectsAsync() => await subjectRepo.GetAllAsync();
 
     public async Task AddStudentProfileAsync(string email, string fullName) =>
         await AddProfileAsync(studentProfileRepo, email, fullName);
@@ -48,4 +51,12 @@ public class AdminCabinetService(
 
         await profileRepo.AddAsync(profile);
     }
+    public async Task AddSubjectAsync(string name)
+    {
+        await subjectRepo.AddAsync(new SubjectModel
+        {
+            Name = name,
+        });
+    }
+
 }
