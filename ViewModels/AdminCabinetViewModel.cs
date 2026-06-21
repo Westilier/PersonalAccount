@@ -11,6 +11,8 @@ public class AdminCabinetGroupInfoViewModel : ViewModel
 
 public class AdminCabinetStudentInfoViewModel : ViewModel
 {
+    public int AccountId { get; set; }
+    public int GroupId { get; set; }
     public string Email { get; set; } = string.Empty;
     public string FullName { get; set; } = string.Empty;
     public string? PhotoUrl { get; set; }
