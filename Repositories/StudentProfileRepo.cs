@@ -19,4 +19,10 @@ public class StudentProfileRepo(
 
         await UpdateByIdAsync(student.Id, entity => entity.GroupId = updatedEntity.GroupId);
     }
+    public async Task<int> CountByGroupIdAsync(int groupId)
+    {
+        return await Ctx.StudentProfiles
+        .Where(student => student.GroupId == groupId)
+        .CountAsync();
+    }
 }
