@@ -83,4 +83,21 @@ public class AdminCabinetService(
     {
         await subjectRepo.DeleteByIdAsync(subjectId);
     }
+
+    public async Task DeleteStudentAsync(int accountId)
+    {
+        var studentProfile = await studentProfileRepo.GetByAccountIdAsync(accountId);
+        if (studentProfile == null) return;
+
+        await studentProfileRepo.DeleteByIdAsync(studentProfile.Id);
+        await accountRepo.DeleteByIdAsync(accountId);
+    }
+    public async Task DeleteTeacherAsync(int accountId)
+    {
+        var teacherProfile = await teacherProfileRepo.GetByAccountIdAsync(accountId);
+        if (teacherProfile == null) return;
+
+        await teacherProfileRepo.DeleteByIdAsync(teacherProfile.Id);
+        await accountRepo.DeleteByIdAsync(accountId);
+    }
 }

@@ -16,4 +16,6 @@ public interface IAdminCabinetService
     Task ChangeStudentGroupAsync(int studentAccountId, int groupId);
     Task DeleteGroupAsync(int groupId);
     Task DeleteSubjectAsync(int subjectId);
+    Task DeleteStudentAsync(int accountId);
+    Task DeleteTeacherAsync(int accountId);
 }
