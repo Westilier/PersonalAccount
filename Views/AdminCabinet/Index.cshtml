@@ -48,11 +48,13 @@
                 </div>
             </div>         
         }
-        <form class="card" style="width: 400px" method="get" asp-action="RegisterStudent">
-            <button class="w-100 h-100 btn btn-outline-primary">Зарегистрировать студента</button>
-        </form>
-        <form class="card" style="width: 400px" method="get" asp-action="AddGroup">
-            <button class="w-100 h-100 btn btn-outline-primary">Создать группу</button>
-        </form>
+        <div class="d-flex gap-4">
+            <form class="card" style="width: 400px" method="get" asp-action="RegisterStudent">
+                <button class="w-100 h-100 btn btn-outline-primary">Зарегистрировать студента</button>
+            </form>
+            <form class="card" style="width: 400px" method="get" asp-action="AddGroup">
+                <button class="w-100 h-100 btn btn-outline-primary">Создать группу</button>
+            </form>
+        </div>
     </div>
 </div>
