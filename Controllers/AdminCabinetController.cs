@@ -5,6 +5,7 @@ using PersonalAccount.Services.Account;
 using PersonalAccount.Services.Cabinet;
 using PersonalAccount.Services.Email;
 using PersonalAccount.Types;
+using PersonalAccount.Utils;
 using PersonalAccount.ViewModels;
 
 namespace PersonalAccount.Controllers;
@@ -94,6 +95,22 @@ public class AdminCabinetController(
                 <p>{password}</p>
              </body>
              """);
+
+        return RedirectToAction("Index");
+    }
+
+    [HttpGet]
+    public IActionResult AddGroup()
+    {
+        return View(new AddGroupViewModel());
+    }
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> AddGroup(AddGroupViewModel model)
+    {
+        if (!ModelState.IsValid || string.IsNullOrEmpty(model.Name)) return View(model);
+
+        await cabinetService.AddGroupAsync(model.Name, model.Description, model.ImageUrl?.ToUri());
 
         return RedirectToAction("Index");
     }
