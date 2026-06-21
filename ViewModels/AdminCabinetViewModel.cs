@@ -1,4 +1,6 @@
-﻿namespace PersonalAccount.ViewModels;
+﻿using PersonalAccount.Models;
+
+namespace PersonalAccount.ViewModels;
 
 public class AdminCabinetGroupInfoViewModel : ViewModel
 {
@@ -9,6 +11,8 @@ public class AdminCabinetGroupInfoViewModel : ViewModel
 
 public class AdminCabinetStudentInfoViewModel : ViewModel
 {
+    public int AccountId { get; set; }
+    public int GroupId { get; set; }
     public string Email { get; set; } = string.Empty;
     public string FullName { get; set; } = string.Empty;
     public string? PhotoUrl { get; set; }
@@ -19,4 +23,5 @@ public class AdminCabinetViewModel : ViewModel
     public List<int> GroupIdsOrder { get; set; } = [];
     public Dictionary<int, AdminCabinetGroupInfoViewModel> GroupInfos { get; set; } = [];
     public Dictionary<int, List<AdminCabinetStudentInfoViewModel>> StudentInfos { get; set; } = [];
+    public List<SubjectModel> Subjects { get; set; } = [];
 }

@@ -70,4 +70,11 @@ public abstract class Repo<TEntity, TModel>(
         updateAction(entity);
         await Ctx.SaveChangesAsync();
     }
+
+    public async Task DeleteByIdAsync(int id)
+    {
+        var entity = await Table.FindAsync(id) ?? throw new KeyNotFoundException();
+        Table.Remove(entity);
+        await Ctx.SaveChangesAsync();
+    }
 }

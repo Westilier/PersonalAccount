@@ -1,4 +1,6 @@
-﻿using PersonalAccount.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using PersonalAccount.Constants;
+using PersonalAccount.Models;
 using PersonalAccount.Repositories;
 using PersonalAccount.Types;
 
@@ -8,7 +10,8 @@ public class AdminCabinetService(
     IStudentProfileRepo studentProfileRepo,
     ITeacherProfileRepo teacherProfileRepo,
     IAccountRepo accountRepo,
-    IGroupRepo groupRepo)
+    IGroupRepo groupRepo,
+    ISubjectRepo subjectRepo)
     : IAdminCabinetService
 {
     public async Task<List<AccountModel>> GetAllStudentAccountsAsync() =>
@@ -17,6 +20,8 @@ public class AdminCabinetService(
     public async Task<List<StudentProfileModel>> GetAllStudentProfilesAsync() => await studentProfileRepo.GetAllAsync();
 
     public async Task<List<GroupModel>> GetAllGroupsAsync() => await groupRepo.GetAllAsync();
+
+    public async Task<List<SubjectModel>> GetAllSubjectsAsync() => await subjectRepo.GetAllAsync();
 
     public async Task AddStudentProfileAsync(string email, string fullName) =>
         await AddProfileAsync(studentProfileRepo, email, fullName);
@@ -47,5 +52,59 @@ public class AdminCabinetService(
         };
 
         await profileRepo.AddAsync(profile);
+    }
+    public async Task AddSubjectAsync(string name)
+    {
+        await subjectRepo.AddAsync(new SubjectModel
+        {
+            Name = name,
+        });
+    }
+
+    public async Task<bool> ChangeStudentGroupAsync(int studentAccountId, int groupId)
+    {
+        if (groupId != GroupConstants.NoGroup.Id)
+        {
+            var groupCount = await studentProfileRepo.CountByGroupIdAsync(groupId);
+
+            if (groupCount >= GroupConstants.MaxGroupCapacity) return false;
+        }
+        await studentProfileRepo.UpdateGroupByAccountIdAsync(studentAccountId, groupId);
+        return true;
+    }
+    public async Task DeleteGroupAsync(int groupId)
+    {
+        if (groupId == GroupConstants.NoGroup.Id) return;
+
+        var studentProfiles = await GetAllStudentProfilesAsync();
+        var studentsInGroup = studentProfiles.Where(s => s.GroupId == groupId);
+        foreach (var item in studentsInGroup)
+        {
+            await ChangeStudentGroupAsync(item.AccountId, GroupConstants.NoGroup.Id);
+        }
+
+        await groupRepo.DeleteByIdAsync(groupId);
+    }
+
+    public async Task DeleteSubjectAsync(int subjectId)
+    {
+        await subjectRepo.DeleteByIdAsync(subjectId);
+    }
+
+    public async Task DeleteStudentAsync(int accountId)
+    {
+        var studentProfile = await studentProfileRepo.GetByAccountIdAsync(accountId);
+        if (studentProfile == null) return;
+
+        await studentProfileRepo.DeleteByIdAsync(studentProfile.Id);
+        await accountRepo.DeleteByIdAsync(accountId);
+    }
+    public async Task DeleteTeacherAsync(int accountId)
+    {
+        var teacherProfile = await teacherProfileRepo.GetByAccountIdAsync(accountId);
+        if (teacherProfile == null) return;
+
+        await teacherProfileRepo.DeleteByIdAsync(teacherProfile.Id);
+        await accountRepo.DeleteByIdAsync(accountId);
     }
 }

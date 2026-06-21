@@ -5,6 +5,7 @@ using PersonalAccount.Services.Account;
 using PersonalAccount.Services.Cabinet;
 using PersonalAccount.Services.Email;
 using PersonalAccount.Types;
+using PersonalAccount.Utils;
 using PersonalAccount.ViewModels;
 
 namespace PersonalAccount.Controllers;
@@ -47,6 +48,8 @@ public class AdminCabinetController(
                 group => group.Key,
                 group => group.Select(student => new AdminCabinetStudentInfoViewModel
                     {
+                        AccountId = student.AccountId,
+                        GroupId = student.GroupId,
                         Email = accountDictionary[student.AccountId].Email,
                         FullName = student.FullName,
                         PhotoUrl = student.PhotoUrl?.ToString()
@@ -54,12 +57,14 @@ public class AdminCabinetController(
                     .ToList()
             );
 
+        var subjects = await cabinetService.GetAllSubjectsAsync();
 
         return View(new AdminCabinetViewModel
         {
             GroupIdsOrder = groupIdsOrder,
             GroupInfos = groupInfos,
-            StudentInfos = studentInfos
+            StudentInfos = studentInfos,
+            Subjects = subjects
         });
     }
 
@@ -95,6 +100,69 @@ public class AdminCabinetController(
              </body>
              """);
 
+        return RedirectToAction("Index");
+    }
+
+    [HttpGet]
+    public IActionResult AddGroup()
+    {
+        return View(new AddGroupViewModel());
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> AddGroup(AddGroupViewModel model)
+   {
+        if (!ModelState.IsValid) return View(model);
+
+        await cabinetService.AddGroupAsync(model.Name, model.Description?? string.Empty, model.ImageUrl?.ToUri());
+
+        return RedirectToAction("Index");
+    }
+
+    [HttpGet]
+    public IActionResult AddSubject()
+    {
+        return View(new AddSubjectViewModel());
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> AddSubject(AddSubjectViewModel model)
+    {
+        if (!ModelState.IsValid) return View(model);
+
+        await cabinetService.AddSubjectAsync(model.Name);
+        return RedirectToAction("Index");
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> ChangeStudentGroup(int studentAccountId, int groupId)
+    {
+        var isSuccess = await cabinetService.ChangeStudentGroupAsync(studentAccountId, groupId);
+
+        if (!isSuccess)
+        {
+            TempData["Error"] = "В группе нет мест!";
+            return RedirectToAction("Index");
+        }
+        return RedirectToAction("Index");
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> DeleteGroup(int groupId)
+    {
+        await cabinetService.DeleteGroupAsync(groupId);
+        return RedirectToAction("Index");
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> DeleteSubject(int subjectId)
+    {
+        await cabinetService.DeleteSubjectAsync(subjectId);
         return RedirectToAction("Index");
     }
 }
