@@ -13,4 +13,7 @@ public interface IRepo<TModel>
     Task<List<TModel>> GetAllAsync();
     Task<bool> AnyAsync();
     Task<bool> ContainsByIdAsync(int id);
+
+    //DELETE
+    Task DeleteByIdAsync(int id);
 }
