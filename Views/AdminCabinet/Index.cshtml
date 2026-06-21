@@ -42,6 +42,21 @@
                                         </p>
                                     </div>
                                 </div>
+                                <div>
+                                    <form method="post" asp-action="ChangeStudentGroup">
+                                        <input type="hidden" name="studentAccountId" value="@studentInfo.AccountId" />
+                                        <select name="groupId">
+                                            @foreach (var gId in Model.GroupIdsOrder)
+                                            {
+                                                var group = Model.GroupInfos[gId];
+                                                <option value="@gId" selected="@(gId == studentInfo.GroupId)">
+                                                    @group.Name
+                                                </option>
+                                            }
+                                        </select>
+                                        <button class="btn btn-sm btn-outline-primary w-100">Сменить Группу</button>
+                                    </form>
+                                </div>
                             </div>
                         }
                     }
