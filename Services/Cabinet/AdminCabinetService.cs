@@ -1,4 +1,5 @@
-﻿using PersonalAccount.Models;
+﻿using PersonalAccount.Constants;
+using PersonalAccount.Models;
 using PersonalAccount.Repositories;
 using PersonalAccount.Types;
 
@@ -64,8 +65,9 @@ public class AdminCabinetService(
         await studentProfileRepo.UpdateGroupByAccountIdAsync(studentAccountId, groupId);
     }
     public async Task DeleteGroupAsync(int groupId)
-    { 
-        await groupRepo.DeleteByIdAsync(groupId);
+    {
+        if (groupId != GroupConstants.NoGroup.Id)
+            await groupRepo.DeleteByIdAsync(groupId);
     }
 
     public async Task DeleteSubjectAsync(int subjectId)
