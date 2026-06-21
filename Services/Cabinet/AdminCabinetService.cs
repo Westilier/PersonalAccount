@@ -61,9 +61,16 @@ public class AdminCabinetService(
         });
     }
 
-    public async Task ChangeStudentGroupAsync(int studentAccountId, int groupId)
+    public async Task<bool> ChangeStudentGroupAsync(int studentAccountId, int groupId)
     {
+        if (groupId != GroupConstants.NoGroup.Id)
+        {
+            var groupCount = await studentProfileRepo.CountByGroupIdAsync(groupId);
+
+            if (groupCount >= GroupConstants.MaxGroupCapacity) return false;
+        }
         await studentProfileRepo.UpdateGroupByAccountIdAsync(studentAccountId, groupId);
+        return true;
     }
     public async Task DeleteGroupAsync(int groupId)
     {

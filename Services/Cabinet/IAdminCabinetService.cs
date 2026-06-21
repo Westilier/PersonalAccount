@@ -13,7 +13,7 @@ public interface IAdminCabinetService
     Task AddTeacherProfileAsync(string email, string fullName);
     Task AddGroupAsync(string groupName, string description = "", Uri? imageUrl = null);
     Task AddSubjectAsync(string name);
-    Task ChangeStudentGroupAsync(int studentAccountId, int groupId);
+    Task<bool> ChangeStudentGroupAsync(int studentAccountId, int groupId);
     Task DeleteGroupAsync(int groupId);
     Task DeleteSubjectAsync(int subjectId);
     Task DeleteStudentAsync(int accountId);
