@@ -8,7 +8,13 @@
     <div class="d-flex justify-content-between align-content-center">
         <h1 class="mb-4">Панель администратора</h1>
     </div>
-
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert">
+            <span>⚠️</span> @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
     <div class="container d-flex flex-column align-items-stretch gap-5">
         @foreach (var groupId in Model.GroupIdsOrder)
         {
